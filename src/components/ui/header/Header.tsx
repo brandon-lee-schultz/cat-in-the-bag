@@ -1,9 +1,10 @@
-import React from "react";
+import React from "react"
 
 type HeaderProps = {
     title: string
     titleSubpart?: string
 }
+
 export default function Header({title, titleSubpart}: HeaderProps) {
     return (
         <div className="mt-5">

@@ -1,8 +1,9 @@
-import {useCallback, useEffect, useState} from "react";
-import {CatFact} from "@/types/CatFact";
+import {useCallback, useEffect, useState} from "react"
+import {CatFact} from "@/types/CatFact"
+import {useCatFacts} from "@/providers/CatFactContext"
 
 type useFactCardProps = {
-    catFact: CatFact
+    index: number
 }
 
 type UseFactCard = {
@@ -11,12 +12,17 @@ type UseFactCard = {
     onTextChange(newText: string): void
     onEditClick(): void
     onSaveClick(): void
+    catFact: CatFact
+    removeCatFact(id: number): void
 }
 
-export default function useFactCard({catFact}: useFactCardProps): UseFactCard {
-    const [text, setText] = useState(catFact?.fact);
-    const [originalFact, setOriginalFact] = useState<string>(catFact?.fact);
-    const [isEnabled, setIsEnabled] = useState<boolean>(false);
+export default function useFactCard({index}: useFactCardProps): UseFactCard {
+    const {catFacts, removeCatFact} = useCatFacts()
+    const catFact = catFacts[index]
+
+    const [text, setText] = useState(catFact?.fact)
+    const [originalFact, setOriginalFact] = useState<string>(catFact?.fact)
+    const [isEnabled, setIsEnabled] = useState<boolean>(false)
 
     const onTextChange = useCallback((newText: string) => {
         setText(newText)
@@ -35,7 +41,7 @@ export default function useFactCard({catFact}: useFactCardProps): UseFactCard {
     useEffect(() => {
         setText(catFact.fact)
         setOriginalFact(catFact.fact)
-    }, [catFact]);
+    }, [catFact])
 
 
     return {
@@ -43,6 +49,8 @@ export default function useFactCard({catFact}: useFactCardProps): UseFactCard {
         isEnabled,
         onTextChange,
         onEditClick,
-        onSaveClick
+        onSaveClick,
+        catFact,
+        removeCatFact
     }
 }

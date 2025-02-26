@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import React from "react";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import App from "@/app/app";
-import {FactProvider} from "@/providers/CatFactContext";
+import React from "react"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import App from "@/app/app"
+import {FactProvider} from "@/providers/CatFactContext"
 
 const queryClient = new QueryClient()
 

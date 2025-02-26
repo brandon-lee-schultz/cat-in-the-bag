@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import { useQuery } from "@tanstack/react-query"
+import {useEffect, useState} from "react"
+import {useQuery} from "@tanstack/react-query"
 import fetchCatFacts from "@/utils/fetchCatFacts"
-import { CatFact } from "@/types/CatFact"
+import {CatFact} from "@/types/CatFact"
 
 type useGetFactProps = {
     factCount: number
@@ -14,33 +14,36 @@ type UseGetFact = {
     error: Error | null
 }
 
-export default function useGetFact({ factCount, clearCache }: useGetFactProps): UseGetFact {
-    const [localData, setLocalData] = useState<CatFact[] | undefined>(undefined)
+export default function useGetFact({factCount, clearCache}: useGetFactProps): UseGetFact {
+    const [catFacts, setCatFacts] = useState<CatFact[] | undefined>(undefined)
+
+    useEffect(() => {
+        const items = localStorage.getItem("cat_facts")
+
+        if (items) {
+            setCatFacts(JSON.parse(items))
+        }
+    }, [])
 
     useEffect(() => {
         if (clearCache && typeof localStorage !== "undefined") {
             localStorage.removeItem("cat_facts")
         }
-
-        const items = typeof localStorage !== "undefined" ? localStorage.getItem("cat_facts") : null
-        if (items) {
-            setLocalData(JSON.parse(items))
-        }
     }, [clearCache])
 
-    const { data, isLoading, error } = useQuery<CatFact[]>({
-        queryKey: ['cat-facts'],
-        queryFn: () => fetchCatFacts({ factCount }),
-        enabled: !localData
+    const {data, isLoading, error} = useQuery<CatFact[]>({
+        queryKey: ["cat-facts"],
+        queryFn: () => fetchCatFacts({factCount}),
+        enabled: !catFacts,
     })
 
     useEffect(() => {
-        if (data && !localData) localStorage.setItem("cat_facts", JSON.stringify(data))
-    }, [data, localData])
+        if (data && !catFacts) localStorage.setItem("cat_facts", JSON.stringify(data))
+    }, [data, catFacts])
 
     return {
-        data: localData ?? data,
-        isLoading: isLoading && localData === undefined,
-        error: error,
+        data: catFacts ?? data,
+        isLoading: isLoading && !catFacts,
+        error,
     }
 }

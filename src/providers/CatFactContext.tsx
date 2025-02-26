@@ -1,6 +1,8 @@
 import {createContext, useContext, useState, ReactNode, useEffect} from "react"
 import {CatFact} from "@/types/CatFact"
 import useGetFact from "@/hooks/useGetFact"
+import {useMutation} from "@tanstack/react-query"
+import fetchCatFacts from "@/utils/fetchCatFacts"
 
 type CatFactContextType = {
     catFacts: CatFact[]
@@ -8,6 +10,7 @@ type CatFactContextType = {
     isLoading: boolean
     error: Error | null
     factCount: number
+    fetchNewFact(newFactCount: number): void
 }
 
 const CatFactContext = createContext<CatFactContextType | undefined>(undefined)
@@ -18,7 +21,7 @@ type FactProviderProps = {
 }
 
 export const FactProvider = ({children, initialFacts}: FactProviderProps) => {
-    const factCount = initialFacts?.length || 8
+    const factCount = 8
 
     const {data, isLoading, error} = useGetFact({factCount})
     const [catFacts, setCatFacts] = useState<CatFact[]>(initialFacts || [])
@@ -47,8 +50,17 @@ export const FactProvider = ({children, initialFacts}: FactProviderProps) => {
         })
     }
 
+    const {mutate: fetchNewFact} = useMutation({
+        mutationFn: (newFactCount: number) => fetchCatFacts({factCount: newFactCount}),
+        onSuccess: (newFacts) => {
+            const updatedFacts = [...(catFacts ?? []), ...newFacts]
+            setCatFacts(updatedFacts);
+            localStorage.setItem("cat_facts", JSON.stringify(updatedFacts))
+        },
+    })
+
     return (
-        <CatFactContext.Provider value={{catFacts, removeCatFact, isLoading, error, factCount}}>
+        <CatFactContext.Provider value={{catFacts, removeCatFact, isLoading, error, factCount, fetchNewFact}}>
             {children}
         </CatFactContext.Provider>
     )

@@ -6,7 +6,8 @@ import fetchCatFacts from "@/utils/fetchCatFacts"
 
 type CatFactContextType = {
     catFacts: CatFact[]
-    removeCatFact: (index: number) => void
+    removeCatFact(index: number): void
+    saveCatFact(index: number, factText: string): void
     isLoading: boolean
     error: Error | null
     factCount: number
@@ -59,8 +60,21 @@ export const FactProvider = ({children, initialFacts}: FactProviderProps) => {
         },
     })
 
+    const saveCatFact = (index: number, factText: string) => {
+        setCatFacts((prevCatFacts) => {
+                const updatedFacts = prevCatFacts.map((fact, i) =>
+                    i === index ? {...fact, fact: factText} : fact
+                )
+
+                localStorage.setItem("cat_facts", JSON.stringify(updatedFacts))
+                return updatedFacts
+            }
+        )
+    }
+
     return (
-        <CatFactContext.Provider value={{catFacts, removeCatFact, isLoading, error, factCount, fetchNewFact}}>
+        <CatFactContext.Provider
+            value={{catFacts, removeCatFact, isLoading, error, factCount, fetchNewFact, saveCatFact}}>
             {children}
         </CatFactContext.Provider>
     )

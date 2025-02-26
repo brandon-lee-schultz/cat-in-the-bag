@@ -17,7 +17,7 @@ type UseFactCard = {
 }
 
 export default function useFactCard({index}: useFactCardProps): UseFactCard {
-    const {catFacts, removeCatFact} = useCatFacts()
+    const {catFacts, removeCatFact, saveCatFact} = useCatFacts()
     const catFact = catFacts[index]
 
     const [text, setText] = useState(catFact?.fact)
@@ -36,7 +36,9 @@ export default function useFactCard({index}: useFactCardProps): UseFactCard {
     const onSaveClick = useCallback(() => {
         setIsEnabled(false)
         setOriginalFact(text)
-    }, [text])
+
+        saveCatFact(index, text)
+    }, [index, saveCatFact, text])
 
     useEffect(() => {
         setText(catFact.fact)

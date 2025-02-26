@@ -25,9 +25,22 @@ type FactProviderProps = {
 export const FactProvider = ({children}: FactProviderProps) => {
     const factCount = 8
 
-    const storedCatFacts = JSON.parse(localStorage.getItem("cat_facts") || "[]");
-    const {data, isLoading, error} = useGetFact({factCount, enabled: storedCatFacts.length === 0})
     const [catFacts, setCatFacts] = useState<CatFact[]>([])
+    const [isClient, setIsClient] = useState(false)
+    const {data, isLoading, error} = useGetFact({factCount, enabled: (isClient && catFacts.length === 0)})
+
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
+
+    useEffect(() => {
+        if (isClient) {
+            const storedCatFacts = localStorage.getItem("cat_facts")
+            if (storedCatFacts) {
+                setCatFacts(JSON.parse(storedCatFacts))
+            }
+        }
+    }, [isClient])
 
     useEffect(() => {
         if (!data) return

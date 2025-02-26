@@ -1,3 +1,5 @@
+"use client"
+
 import {createContext, useContext, useState, ReactNode, useEffect} from "react"
 import {CatFact} from "@/types/CatFact"
 import useGetFact from "@/hooks/useGetFact"
@@ -18,14 +20,13 @@ const CatFactContext = createContext<CatFactContextType | undefined>(undefined)
 
 type FactProviderProps = {
     children: ReactNode
-    initialFacts?: CatFact[]
 }
 
-export const FactProvider = ({children, initialFacts}: FactProviderProps) => {
+export const FactProvider = ({children}: FactProviderProps) => {
     const factCount = 8
 
     const {data, isLoading, error} = useGetFact({factCount})
-    const [catFacts, setCatFacts] = useState<CatFact[]>(initialFacts || [])
+    const [catFacts, setCatFacts] = useState<CatFact[]>([])
 
     useEffect(() => {
         if (data && !isLoading && !error) {

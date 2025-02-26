@@ -1,18 +1,11 @@
-"use client"
-
 import React from "react"
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 import App from "@/app/app"
-import {FactProvider} from "@/providers/CatFactContext"
+import { metadata } from "./layout.metadata"
 
-const queryClient = new QueryClient()
+export {metadata}
 
 export default function Home() {
     return (
-        <QueryClientProvider client={queryClient}>
-            <FactProvider>
-                <App/>
-            </FactProvider>
-        </QueryClientProvider>
+        <App/>
     )
 }

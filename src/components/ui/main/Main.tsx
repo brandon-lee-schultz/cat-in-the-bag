@@ -1,3 +1,5 @@
+"use client"
+
 import FactCard from "@/components/ui/fact-card/FactCard"
 import {SkeletonLoader} from "@/components/ui/skeleton-loader/SkeletonLoader"
 import React from "react"

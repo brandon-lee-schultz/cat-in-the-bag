@@ -1,6 +1,10 @@
-import type {Metadata} from "next"
+"use client"
+
 import {Geist, Geist_Mono} from "next/font/google"
 import "./globals.css"
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {FactProvider} from "@/providers/CatFactContext";
+import React from "react";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -12,23 +16,26 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 })
 
-export const metadata: Metadata = {
-    title: "Cat in the BAG!",
-    description: "Technical Assessment for Reload Holdings",
-}
+const queryClient = new QueryClient()
 
 export default function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode
 }>) {
+
     return (
-        <html lang="en">
-        <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-        {children}
-        </body>
-        </html>
+        <QueryClientProvider client={queryClient}>
+            <FactProvider>
+                <html lang="en">
+                <body
+                    className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                >
+                {children}
+                </body>
+                </html>
+            </FactProvider>
+        </QueryClientProvider>
+
     )
 }

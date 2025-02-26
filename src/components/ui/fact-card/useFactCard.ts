@@ -1,3 +1,5 @@
+"use client"
+
 import {useCallback, useEffect, useState} from "react"
 import {CatFact} from "@/types/CatFact"
 import {useCatFacts} from "@/providers/CatFactContext"

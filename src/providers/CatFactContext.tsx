@@ -25,10 +25,12 @@ type FactProviderProps = {
 export const FactProvider = ({children}: FactProviderProps) => {
     const factCount = 8
 
-    const {data, isLoading, error} = useGetFact({factCount})
+    const storedCatFacts = JSON.parse(localStorage.getItem("cat_facts") || "[]");
+    const {data, isLoading, error} = useGetFact({factCount, enabled: storedCatFacts.length === 0})
     const [catFacts, setCatFacts] = useState<CatFact[]>([])
 
     useEffect(() => {
+        if (!data) return
         if (data && !isLoading && !error) {
             setCatFacts((prevCatFacts) => {
                 if (JSON.stringify(prevCatFacts) !== JSON.stringify(data)) {

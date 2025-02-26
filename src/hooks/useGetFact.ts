@@ -8,6 +8,7 @@ import {CatFact} from "@/types/CatFact"
 type useGetFactProps = {
     factCount: number
     clearCache?: boolean
+    enabled: boolean
 }
 
 type UseGetFact = {
@@ -16,7 +17,7 @@ type UseGetFact = {
     error: Error | null
 }
 
-export default function useGetFact({factCount, clearCache}: useGetFactProps): UseGetFact {
+export default function useGetFact({factCount, clearCache, enabled}: useGetFactProps): UseGetFact {
     const [catFacts, setCatFacts] = useState<CatFact[] | undefined>(undefined)
 
     useEffect(() => {
@@ -36,7 +37,7 @@ export default function useGetFact({factCount, clearCache}: useGetFactProps): Us
     const {data, isLoading, error} = useQuery<CatFact[]>({
         queryKey: ["cat-facts"],
         queryFn: () => fetchCatFacts({factCount}),
-        enabled: !catFacts,
+        enabled: enabled && !catFacts,
     })
 
     useEffect(() => {
